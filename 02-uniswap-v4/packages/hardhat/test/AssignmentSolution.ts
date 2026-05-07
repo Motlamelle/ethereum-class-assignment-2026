@@ -11,7 +11,7 @@ describe("Uniswap v4 Assignment Solution", function () {
   let pnpToken: PNPToken;
   let fnbToken: FNBToken;
   let poolManager: any;
-  let assignment: RewardTokensManager;
+  let tokensManager: RewardTokensManager;
 
   beforeEach(async () => {
     const pnpFactory = await ethers.getContractFactory("PNPToken");
@@ -31,50 +31,50 @@ describe("Uniswap v4 Assignment Solution", function () {
     poolManager = await poolManagerFactory.deploy(deployer.address);
     await poolManager.waitForDeployment();
 
-    const assignmentFactory = await ethers.getContractFactory("RewardTokensManager");
-    assignment = (await assignmentFactory.deploy(
+    const tokensManagerFactory = await ethers.getContractFactory("RewardTokensManager");
+    tokensManager = (await tokensManagerFactory.deploy(
       await poolManager.getAddress(),
       await pnpToken.getAddress(),
       await fnbToken.getAddress(),
     )) as RewardTokensManager;
-    await assignment.waitForDeployment();
+    await tokensManager.waitForDeployment();
   });
 
   it("creates the pool using 0.3% fee, spacing 60, no hooks, and emits PoolCreated", async () => {
     const [owner] = await ethers.getSigners();
-    const tx = await assignment.createPool(SQRT_PRICE_X96);
+    const tx = await tokensManager.createPool(SQRT_PRICE_X96);
 
-    const poolId = await assignment.getPoolId();
-    const [currency0, currency1] = await assignment.getCanonicalCurrencies();
+    const poolId = await tokensManager.getPoolId();
+    const [currency0, currency1] = await tokensManager.getCanonicalCurrencies();
 
     await expect(tx)
-      .to.emit(assignment, "PoolCreated")
+      .to.emit(tokensManager, "PoolCreated")
       .withArgs(poolId, currency0, currency1, 3000, 60, ethers.ZeroAddress, SQRT_PRICE_X96);
 
-    expect(await assignment.createdPools(poolId)).to.equal(true);
-    expect(await assignment.FEE_TIER()).to.equal(3000);
-    expect(await assignment.TICK_SPACING()).to.equal(60);
-    expect(await assignment.HOOKS()).to.equal(ethers.ZeroAddress);
+    expect(await tokensManager.createdPools(poolId)).to.equal(true);
+    expect(await tokensManager.FEE_TIER()).to.equal(3000);
+    expect(await tokensManager.TICK_SPACING()).to.equal(60);
+    expect(await tokensManager.HOOKS()).to.equal(ethers.ZeroAddress);
     expect(owner.address).to.not.equal(ethers.ZeroAddress);
   });
 
   it("mints liquidity in same pool and emits LiquidityMinted", async () => {
     const [owner] = await ethers.getSigners();
-    await assignment.createPool(SQRT_PRICE_X96);
+    await tokensManager.createPool(SQRT_PRICE_X96);
 
-    const targetTick = await assignment.getAssignmentTargetTick();
+    const targetTick = await tokensManager.getTargetTick();
     // Keep range aligned to spacing 60 and ensure it includes the target tick.
     const tickLower = targetTick - (targetTick % 60n) - 120n;
     const tickUpper = targetTick - (targetTick % 60n) + 120n;
 
-    const tx = await assignment.mintLiquidity(Number(tickLower), Number(tickUpper), LIQUIDITY);
-    const poolId = await assignment.getPoolId();
+    const tx = await tokensManager.mintLiquidity(Number(tickLower), Number(tickUpper), LIQUIDITY);
+    const poolId = await tokensManager.getPoolId();
 
     await expect(tx)
-      .to.emit(assignment, "LiquidityMinted")
+      .to.emit(tokensManager, "LiquidityMinted")
       .withArgs(poolId, 0, owner.address, Number(tickLower), Number(tickUpper), LIQUIDITY);
 
-    const position = await assignment.positions(0);
+    const position = await tokensManager.positions(0);
     expect(position.poolId).to.equal(poolId);
     expect(position.owner).to.equal(owner.address);
     expect(position.tickLower).to.equal(Number(tickLower));
@@ -83,8 +83,8 @@ describe("Uniswap v4 Assignment Solution", function () {
   });
 
   it("reverts if minted range does not cover assignment implied tick", async () => {
-    await assignment.createPool(SQRT_PRICE_X96);
-    const targetTick = await assignment.getAssignmentTargetTick();
+    await tokensManager.createPool(SQRT_PRICE_X96);
+    const targetTick = await tokensManager.getTargetTick();
 
     // Create an aligned range that excludes the target tick.
     const alignedBase = targetTick - (targetTick % 60n);
@@ -92,7 +92,7 @@ describe("Uniswap v4 Assignment Solution", function () {
     const tickUpper = alignedBase + 240n;
 
     await expect(
-      assignment.mintLiquidity(Number(tickLower), Number(tickUpper), LIQUIDITY),
-    ).to.be.revertedWithCustomError(assignment, "TickRangeDoesNotCoverAssignmentPrice");
+      tokensManager.mintLiquidity(Number(tickLower), Number(tickUpper), LIQUIDITY),
+    ).to.be.revertedWithCustomError(tokensManager, "TickRangeDoesNotCoverAssignmentPrice");
   });
 });
