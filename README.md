@@ -1,6 +1,6 @@
 # Welcome!
 
-Welcome to the wiki for the Fintech and Cryptocurrency course ECO5037W assignment. The wiki has been designed to provide you with information and links to any new concepts required for this assignment as well as the objectives and requirements for the assignment.
+Welcome to the repo for the Fintech and Cryptocurrency course ECO5037W assignment. The repo has been designed to provide you with information and links to any new concepts required for this assignment as well as the objectives and requirements for the assignment.
 
 The assignment is based on Fungible Tokens that follow the ERC20 standard. In class we learnt about the ERC721 standard for Non Fungible Tokens (NFTs). You are going to apply many aspects of what we learnt from the tutorials to complete the assignment. After completing the assignment you should have a basic understanding of the ERC20 standard and Decentralized Exchanges (DEXs).
 
