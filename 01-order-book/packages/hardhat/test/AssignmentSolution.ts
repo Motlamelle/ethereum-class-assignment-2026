@@ -32,7 +32,7 @@ describe("Assignment Solution", function () {
   });
 
   describe("Part 1 - ERC20 tokens", function () {
-    it("sets token metadata and total supply", async () => {
+    it("1", async () => {
       expect(await tokenA.name()).to.equal("PNP Token");
       expect(await tokenA.symbol()).to.equal("PNPT");
       expect(await tokenA.totalSupply()).to.equal(INITIAL_SUPPLY);
