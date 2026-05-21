@@ -25,6 +25,8 @@
     "@inquirer/password": "^4.0.2",
     "@openzeppelin/contracts": "~5.0.2",
     "@typechain/ethers-v6": "~0.5.1",
+    "@uniswap/v4-core": "^1.0.2",
+    "@uniswap/v4-periphery": "^1.0.3",
     "dotenv": "~16.4.5",
     "envfile": "~7.1.0",
     "forge-std": "^1.1.2",

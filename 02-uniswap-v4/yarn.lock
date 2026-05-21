@@ -4250,6 +4250,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:~8.27.0"
     "@typescript-eslint/parser": "npm:~8.27.0"
     "@uniswap/v4-core": "npm:^1.0.2"
+    "@uniswap/v4-periphery": "npm:^1.0.3"
     chai: "npm:~4.5.0"
     dotenv: "npm:~16.4.5"
     envfile: "npm:~7.1.0"
@@ -6075,6 +6076,13 @@ __metadata:
   version: 1.0.2
   resolution: "@uniswap/v4-core@npm:1.0.2"
   checksum: 10/8e3a218ccecc507c81e0693170b7c46fa0b0784b4aed95edc05845bdfa7dd2ba77d178db74fe47424684db736b8f1725126c2c6bad3a20f45ec8d9e9de88d5dc
+  languageName: node
+  linkType: hard
+
+"@uniswap/v4-periphery@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@uniswap/v4-periphery@npm:1.0.3"
+  checksum: 10/515b8e4749d8af18d37d77691cb0d42cb66f05c3adc1b88120ee0e4fe61d6ea5c5ab780c7b1045d7f5cf8f68625d8a60272c2fe433302f4f764a106b5593f0d8
   languageName: node
   linkType: hard
 
